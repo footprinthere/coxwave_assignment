@@ -46,6 +46,7 @@ class Main:
         parser.add_argument("--source_path", type=str, required=True)
         parser.add_argument("--collection_name", type=str, required=True)
         parser.add_argument("--max_retry", type=int, default=3)
+        parser.add_argument("--max_history", type=int, default=5)
 
         return parser.parse_args()
 
@@ -60,7 +61,11 @@ class Main:
 
         # Prepare GPT agent
         log("Preparing GPT agent ...")
-        agent = ChatbotAgent(model=ModelName.GPT_3_5_1106, db_collection=db_collection)
+        agent = ChatbotAgent(
+            model=ModelName.GPT_3_5_1106,
+            db_collection=db_collection,
+            max_history=cls.args.max_history,
+        )
         return agent
 
     @classmethod

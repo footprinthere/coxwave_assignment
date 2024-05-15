@@ -33,6 +33,9 @@ class Main:
         while True:
             user_input = input(">>> ").strip()
             result = cls._cycle(user_input, retry_count)
+            if cls.args.debug:
+                log(f"Cycle result: {result}")
+
             if result == ChatbotCycleResult.OK:
                 retry_count = 0
             elif result == ChatbotCycleResult.RETRY:
@@ -47,6 +50,7 @@ class Main:
         parser.add_argument("--collection_name", type=str, required=True)
         parser.add_argument("--max_retry", type=int, default=3)
         parser.add_argument("--max_history", type=int, default=5)
+        parser.add_argument("--debug", action="store_true")
 
         return parser.parse_args()
 
@@ -88,7 +92,11 @@ class Main:
             n_retrievals = 2 * retry_count + 1  # 1, 3, 5, ...
             result = ChatbotCycleResult.OK
 
-        answer = cls.agent.answer(question=user_input, n_retrievals=n_retrievals)
+        answer = cls.agent.answer(
+            question=user_input, n_retrievals=n_retrievals, verbose=cls.args.debug
+        )
+        if cls.args.debug:
+            log(f"Model answer\n{answer}\n")
         if answer.upper().startswith("X"):
             print(
                 "죄송합니다. 스마트스토어와 관련이 없는 질문에는 답변해드릴 수 없어요."

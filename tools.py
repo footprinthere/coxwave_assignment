@@ -9,4 +9,5 @@ class ChatbotCycleResult(Enum):
     OK = auto()
     RETRY = auto()
     INVALID = auto()
+    UNRELATED = auto()
     EXIT = auto()

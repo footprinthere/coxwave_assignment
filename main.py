@@ -72,27 +72,32 @@ class Main:
     def _cycle(cls, user_input: str, retry_count: int) -> ChatbotCycleResult:
         if user_input == "":
             return ChatbotCycleResult.INVALID
-
-        if not user_input.startswith("!"):
-            answer = cls.agent.answer(
-                question=user_input,
-                n_retrievals=2 * retry_count + 1,  # 1, 3, 5, ...
-            )
-            print(f"--> {answer}\n")
-            return ChatbotCycleResult.OK
-
         if user_input == "!종료":
             return ChatbotCycleResult.EXIT
-        elif user_input == "!재시도":
-            if retry_count >= cls.args.max_retry:
-                print("더 이상 재시도할 수 없습니다.")
-                return ChatbotCycleResult.INVALID
-            answer = cls.agent.answer(n_retrievals=2 * retry_count + 3)
-            print(f"--> {answer}\n")
-            return ChatbotCycleResult.RETRY
-        else:
+        if user_input.startswith("!") and user_input != "!재시도":
             print("잘못된 명령어입니다.")
             return ChatbotCycleResult.INVALID
+
+        if user_input == "!재시도":
+            if retry_count >= cls.args.max_retry:
+                print("최대 횟수를 초과해 더 이상 재시도할 수 없습니다.")
+                return ChatbotCycleResult.INVALID
+            n_retrievals = 2 * retry_count + 3  # 3, 5, 7, ...
+            result = ChatbotCycleResult.RETRY
+        else:
+            n_retrievals = 2 * retry_count + 1  # 1, 3, 5, ...
+            result = ChatbotCycleResult.OK
+
+        answer = cls.agent.answer(question=user_input, n_retrievals=n_retrievals)
+        if answer.upper().startswith("X"):
+            print(
+                "죄송합니다. 스마트스토어와 관련이 없는 질문에는 답변해드릴 수 없어요."
+            )
+            cls.agent.clear_history()
+            return ChatbotCycleResult.UNRELATED
+        else:
+            print(f"--> {answer}\n")
+            return result
 
     START_MESSAGE = (
         "스마트스토어 챗봇을 시작합니다. 스마트스토어에 관한 질문을 입력하시면 FAQ 기록을 바탕으로 답변해드립니다.\n"
@@ -104,4 +109,4 @@ class Main:
 
 
 if __name__ == "__main__":
-    Main().main()
+    Main.main()

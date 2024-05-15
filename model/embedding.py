@@ -1,11 +1,7 @@
-from openai import OpenAI
 from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
 
-from model import OPENAI_API_KEY
-from model.model_name import ModelName
-
-
-openai_client = OpenAI(api_key=OPENAI_API_KEY)
+from .client import OPENAI_API_KEY, openai_client
+from .model_name import ModelName
 
 
 def embed(inputs: list[str], model: ModelName) -> list[list[float]]:

@@ -2,7 +2,12 @@ import os
 import argparse
 
 from data import prepare_db, TitleOnlySourceProcessor
-from model import get_chroma_embedding_function, ChatbotAgent, ModelName
+from model import (
+    get_chroma_embedding_function,
+    ChatbotAgent,
+    ModelName,
+    EmptyMessageError,
+)
 from tools import log, ChatbotCycleResult
 
 
@@ -86,10 +91,16 @@ class Main:
             if retry_count >= cls.args.max_retry:
                 print("최대 횟수를 초과해 더 이상 재시도할 수 없습니다.")
                 return ChatbotCycleResult.INVALID
-            answer = cls.agent.answer(
-                n_retrievals=2 * retry_count + 3, verbose=cls.args.debug
-            )
-            result = ChatbotCycleResult.RETRY
+            try:
+                answer = cls.agent.answer(
+                    n_retrievals=2 * retry_count + 3,
+                    verbose=cls.args.debug,
+                )
+            except EmptyMessageError:
+                print("입력된 질문이 없어 재시도할 수 없습니다.")
+                return ChatbotCycleResult.INVALID
+            else:
+                result = ChatbotCycleResult.RETRY
         else:
             answer = cls.agent.answer(
                 question=user_input,

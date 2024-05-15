@@ -72,6 +72,9 @@ class ChatbotAgent(BaseGPTAgent):
         return self._call_api(temperature=0.1)
 
     def retrieve_info(self, question: str, n_results: int = 1) -> str:
+        if question.strip() == "":
+            raise EmptyMessageError("Query question is empty")
+
         result = self.db_collections.query(query_texts=[question], n_results=n_results)
         metadatas = result["metadatas"]
         assert metadatas is not None
@@ -88,4 +91,6 @@ class ChatbotAgent(BaseGPTAgent):
         self._question_history.clear()
 
     def parse_history(self) -> str:
+        if len(self._question_history) == 0:
+            raise EmptyMessageError("Question history is empty")
         return "\n".join(self._question_history)

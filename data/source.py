@@ -1,5 +1,6 @@
-from typing import Optional
+from typing import Optional, overload
 from abc import ABC, abstractmethod
+
 import re
 import pickle
 
@@ -25,6 +26,13 @@ def preprocess_content(content: str) -> str:
 
 
 class BaseSourceProcessor(ABC):
+
+    @overload
+    def __init__(self, *, data: dict[str, str], data_path: None = ...) -> None: ...
+
+    @overload
+    def __init__(self, *, data: None = ..., data_path: str) -> None: ...
+
     def __init__(
         self,
         *,
@@ -59,5 +67,14 @@ class BaseSourceProcessor(ABC):
 
 
 class ConcatSourceProcessor(BaseSourceProcessor):
+    """Simply concatenate title and content."""
+
     def process_entry(self, title: str, content: str) -> str:
         return f"{title} {content}"
+
+
+class TitleOnlySourceProcessor(BaseSourceProcessor):
+    """Use only title."""
+
+    def process_entry(self, title: str, content: str) -> str:
+        return title

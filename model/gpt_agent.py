@@ -20,7 +20,7 @@ class BaseGPTAgent:
     def _add_message(self, role: Literal["system", "user"], content: str) -> None:
         self._messages.append({"role": role, "content": content})  # type: ignore
 
-    def _clear_message(self) -> None:
+    def _clear_messages(self) -> None:
         self._messages.clear()
 
     def _call_api(self, temperature: float) -> str:
@@ -67,6 +67,7 @@ class ChatbotAgent(BaseGPTAgent):
             log(f"--- Retrieved Information ---\n{retrieved}")
             log(f"--- Prompt ---\n{message}")
 
+        self._clear_messages()
         self._add_message(role="user", content=message)
         return self._call_api(temperature=0.1)
 

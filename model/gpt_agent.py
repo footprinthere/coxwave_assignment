@@ -1,4 +1,4 @@
-from typing import Literal
+from typing import Literal, Optional
 
 from openai.types.chat.chat_completion_message_param import ChatCompletionMessageParam
 from chromadb import Collection
@@ -49,11 +49,12 @@ class ChatbotAgent(BaseGPTAgent):
 
     def answer(
         self,
-        question: str,
+        question: Optional[str] = None,
         n_retrievals: int = 1,
         verbose: bool = False,
     ) -> str:
-        self._question_history.append(question)
+        if question is not None:
+            self._question_history.append(question)
         parsed_question = self.parse_history()
 
         retrieved = self.retrieve_info(question=parsed_question, n_results=n_retrievals)

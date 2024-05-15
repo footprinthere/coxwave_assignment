@@ -86,15 +86,18 @@ class Main:
             if retry_count >= cls.args.max_retry:
                 print("최대 횟수를 초과해 더 이상 재시도할 수 없습니다.")
                 return ChatbotCycleResult.INVALID
-            n_retrievals = 2 * retry_count + 3  # 3, 5, 7, ...
+            answer = cls.agent.answer(
+                n_retrievals=2 * retry_count + 3, verbose=cls.args.debug
+            )
             result = ChatbotCycleResult.RETRY
         else:
-            n_retrievals = 2 * retry_count + 1  # 1, 3, 5, ...
+            answer = cls.agent.answer(
+                question=user_input,
+                n_retrievals=2 * retry_count + 1,  # 1, 3, 5, ...
+                verbose=cls.args.debug,
+            )
             result = ChatbotCycleResult.OK
 
-        answer = cls.agent.answer(
-            question=user_input, n_retrievals=n_retrievals, verbose=cls.args.debug
-        )
         if cls.args.debug:
             log(f"Model answer\n{answer}\n")
         if answer.upper().startswith("X"):

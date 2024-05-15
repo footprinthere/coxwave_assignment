@@ -3,6 +3,7 @@ from tqdm import tqdm
 
 import chromadb
 
+from tools import log
 from .source import BaseSourceProcessor
 
 
@@ -18,7 +19,7 @@ def prepare_db(
 
     # Check if the collection already exists
     if collection_name in [c.name for c in db_client.list_collections()]:
-        logging.info("Specified collection already exists.")
+        log("Specified collection already exists.")
         return db_client.get_collection(
             name=collection_name,
             embedding_function=embedding_function,

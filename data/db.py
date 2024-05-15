@@ -1,6 +1,7 @@
 import logging
-import chromadb
 from tqdm import tqdm
+
+import chromadb
 
 from .source import BaseSourceProcessor
 
@@ -34,7 +35,7 @@ def prepare_db(
 
     for i in tqdm(range(0, len(data), chunk_size), desc="Adding data to DB"):
         chunk_slice = slice(i, i + chunk_size)
-        chunk_ids = [str(idx) for idx in range(i, i + chunk_size)]
+        chunk_ids = [str(idx) for idx in range(*chunk_slice.indices(len(data)))]
         chunk_documents = data[chunk_slice]
         chunk_metadata = metadata[chunk_slice]
         collection.add(

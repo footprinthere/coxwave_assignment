@@ -18,8 +18,6 @@
         --collection_name="faq"
     ```
 
-* You can also run the script in `main.sh`.
-
 **Program Arguments**
 * `source_path: str`: Path to the FAQ dataset file (.pkl).
 * `collection_name: str`: Name of the ChromaDB collection to use. The database will be stored in `chromadb/` directory.

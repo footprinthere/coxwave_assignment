@@ -112,6 +112,6 @@ class ChatbotAgent(BaseGPTAgent):
         # Truncate after the last period
         p_idx = answer.rfind(".")
         if p_idx > 0:
-            answer = answer[:p_idx]
+            answer = answer[: p_idx + 1]
 
         return answer

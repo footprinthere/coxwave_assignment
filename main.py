@@ -109,8 +109,6 @@ class Main:
             )
             result = ChatbotCycleResult.OK
 
-        if cls.args.debug:
-            log(f"Model answer\n{answer}\n")
         if answer.upper().startswith("X"):
             print(
                 "죄송합니다. 스마트스토어와 관련이 없는 질문에는 답변해드릴 수 없어요."

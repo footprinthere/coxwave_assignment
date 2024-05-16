@@ -41,7 +41,11 @@ class ChatbotAgent(BaseGPTAgent):
 
         self._clear_messages()
         self._add_message(role="user", content=message)
-        return self._call_api(temperature=0.1)
+        answer = self._call_api(temperature=0.1)
+        if verbose:
+            log(f"--- Model Answer ---\n{answer}")
+
+        return answer
 
     def retrieve_info(self, question: str, n_results: int = 1) -> str:
         if question.strip() == "":

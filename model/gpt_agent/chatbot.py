@@ -105,7 +105,11 @@ class ChatbotAgent(BaseGPTAgent):
         if rephrased is not None:
             return rephrased
         else:
-            return self._question_history[-1]  # use the last question
+            # Not related to previous questions
+            new_question = self._question_history[-1]
+            self.clear_history()
+            self.add_history(new_question)
+            return new_question
 
     @staticmethod
     def _process_answer(answer: str) -> str:

@@ -54,7 +54,7 @@ class QuestionRephraseAgent(BaseGPTAgent):
     def _parse_json_output(
         output: str,
         required_fields: list[str],
-        verbose: bool,
+        verbose: bool = False,
     ) -> dict[str, Any]:
         try:
             parsed = json.loads(output)

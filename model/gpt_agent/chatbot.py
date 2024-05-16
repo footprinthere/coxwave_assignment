@@ -4,10 +4,11 @@ from collections import deque
 from chromadb import Collection
 
 from tools import log
-from ..exceptions import EmptyMessageError
+from ..exceptions import EmptyMessageError, ParsingError
 from ..model_name import ModelName
 from ..prompts import CHATBOT_ANSWER
 from .base import BaseGPTAgent
+from .rephrase import QuestionRephraseAgent
 
 
 class ChatbotAgent(BaseGPTAgent):
@@ -20,6 +21,8 @@ class ChatbotAgent(BaseGPTAgent):
         self.max_history = max_history
 
         self._question_history: deque[str] = deque()
+        self._last_answer: Optional[str] = None
+        self._rephrase_agent = QuestionRephraseAgent(model=model)
 
     def answer(
         self,
@@ -29,11 +32,15 @@ class ChatbotAgent(BaseGPTAgent):
     ) -> str:
         if question is not None:
             self.add_history(question)
-        parsed_question = self.parse_history()
+        rephrased_question = self._rephrase_history(verbose=verbose)
+        if verbose:
+            log(f"--- Rephrased Question ---\n{rephrased_question}")
 
-        retrieved = self.retrieve_info(question=parsed_question, n_results=n_retrievals)
+        retrieved = self.retrieve_info(
+            question=rephrased_question, n_results=n_retrievals
+        )
         message = ChatbotAgent.prompt.format(
-            question=parsed_question, retrieved=retrieved
+            question=rephrased_question, retrieved=retrieved
         )
         if verbose:
             log(f"--- Retrieved Information ---\n{retrieved}")
@@ -45,6 +52,7 @@ class ChatbotAgent(BaseGPTAgent):
         if verbose:
             log(f"--- Model Answer ---\n{answer}")
 
+        self._last_answer = answer
         return answer
 
     def retrieve_info(self, question: str, n_results: int = 1) -> str:
@@ -65,8 +73,36 @@ class ChatbotAgent(BaseGPTAgent):
 
     def clear_history(self) -> None:
         self._question_history.clear()
+        self._last_answer = None
 
-    def parse_history(self) -> str:
+    def _rephrase_history(
+        self,
+        max_retry: int = 3,
+        verbose: bool = False,
+    ) -> str:
         if len(self._question_history) == 0:
             raise EmptyMessageError("Question history is empty")
-        return "\n".join(self._question_history)
+        if len(self._question_history) == 1:
+            return self._question_history[-1]
+        if self._last_answer is None:
+            raise ValueError("Last answer is not set")
+
+        for _ in range(max_retry):
+            try:
+                rephrased = self._rephrase_agent.answer(
+                    question_history=list(self._question_history)[:-1],
+                    last_answer=self._last_answer,
+                    new_question=self._question_history[-1],
+                    verbose=verbose,
+                )
+            except ParsingError as e:
+                continue
+            else:
+                break
+        else:
+            raise ParsingError(f"Failed to rephrase question after {max_retry} trials")
+
+        if rephrased is not None:
+            return rephrased
+        else:
+            return self._question_history[-1]  # use the last question

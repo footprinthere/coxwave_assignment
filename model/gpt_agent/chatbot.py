@@ -6,7 +6,7 @@ from chromadb import Collection
 from tools import log
 from ..exceptions import EmptyMessageError, ParsingError
 from ..model_name import ModelName
-from ..prompts import CHATBOT_ANSWER
+from .prompts import CHATBOT_ANSWER
 from .base import BaseGPTAgent
 from .rephrase import QuestionRephraseAgent
 

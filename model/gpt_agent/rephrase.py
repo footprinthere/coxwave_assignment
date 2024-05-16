@@ -3,7 +3,7 @@ import json
 
 from tools import log
 from ..exceptions import ParsingError
-from ..prompts import QUESTION_REPHRASE
+from .prompts import QUESTION_REPHRASE
 from .base import BaseGPTAgent
 
 

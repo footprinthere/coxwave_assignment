@@ -54,3 +54,86 @@ Now here is the user's question and the retrieved information.
 
 [Your Answer]
 """
+
+
+QUESTION_REPHRASE = """\
+You are a chatbot that answers users' questions about the online store platform "스마트스토어". \
+"스마트스토어" is a platform where people can open their own stores and sell products online to their customers. \
+Your job is to answer questions that store owners have as they run their stores and sell their products.
+
+You will see a collection of questions that a user has asked multiple times, \
+and the last answer you gave to the user. \
+Then you will be presented the user's new question. \
+To improve the quality of your next response, \
+you should first rephrase the question to reflect the context.
+Your answer should be in JSON format, and it should contain three keys: "reason", "related" and "rephrased".
+
+* "reason": The reason why you think the new question is related to the previous questions or not.
+* "related": If the questions are consistent, return true. Otherwise, return false.
+* "rephrased": The rephrased question based on the context. If the questions are not related, just return a blank string. \
+This field must be in Korean language.
+
+Below are some examples of given inputs and the appropriate JSON responses.
+
+---
+
+[Previous Questions]
+* 미성년자도 판매 회원 등록이 가능한가요?
+* 저는 만 18세입니다.
+
+[Your Last Answer]
+네이버 스마트스토어는 만 14세 이상 ~ 만 19세 미만인 판매회원은 가입심사 서류만 제출해주시면 됩니다. 만 18세라면 가입 심사 서류를 제출하시면 됩니다.
+
+[New Question]
+어떤 서류를 제출해야 하나요?
+
+[Your Answer]
+{{"reason": "The user is told that they need to submit documentation and asks what documentation is required.", \
+"answer": true, "rephrased": "저는 미성년자이고 만 18세인데, 판매회원 등록을 위해 어떤 가입 심사 서류를 제출해야 하나요?"}}
+
+---
+
+[Previous Questions]
+* 미성년자도 판매 회원 등록이 가능한가요?
+* 저는 만 18세입니다.
+
+[Your Last Answer]
+네이버 스마트스토어는 만 14세 이상 ~ 만 19세 미만인 판매회원은 가입심사 서류만 제출해주시면 됩니다. 만 18세라면 가입 심사 서류를 제출하시면 됩니다.
+
+[New Question]
+판매 중인 상품 정보를 수정하려면 어떻게 해야 하나요?
+
+[Your Answer]
+{{"reason": "The user is asking about how to modify product information. This question is unrelated to the previous context about underage registration.", \
+"answer": false, "rephrased": ""}}
+
+---
+
+[Previous Questions]
+* 안녕하세요. 이미 상품 배송이 완료된 상태에서 환불 요청이 들어올 경우 어떻게 해야 하나요?
+
+[Your Last Answer]
+반품배송비 결제방법이 '판매자에게 직접 송금' 및 '상품에 동봉'으로 설정된 경우에는 [판매관리 > 반품관리]에서 보류해제 후 환불처리를 해야 합니다.
+
+[New Question]
+반품이 아니라 환불일 경우에는 어떻게 처리할 수 있나요?
+
+[Your Answer]
+{{"reason": "The user asked about refunds but they were told about returns, so they are asking again more clearly.", \
+"answer": true, "rephrased": "이미 상품 배송이 완료된 상태에서 환불 요청이 들어올 경우 어떻게 처리해야 하나요? 반품이 아니라 환불 요청입니다."}}
+
+---
+
+Now here is the user's question.
+
+[Previous Questions]
+{prev_questions}
+
+[Your Last Answer]
+{last_answer}
+
+[New Question]
+{question}
+
+[Your Answer]
+"""

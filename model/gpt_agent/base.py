@@ -1,5 +1,6 @@
-from typing import Literal
+from typing import Any, Literal
 
+from openai.types.chat.chat_completion import ChatCompletion
 from openai.types.chat.chat_completion_message_param import ChatCompletionMessageParam
 
 from ..client import openai_client
@@ -19,15 +20,19 @@ class BaseGPTAgent:
     def _clear_messages(self) -> None:
         self._messages.clear()
 
-    def _call_api(self, temperature: float) -> str:
+    def _call_api(self, temperature: float, json_mode: bool = False) -> str:
         if len(self._messages) == 0:
             raise EmptyMessageError("Messages should be added before calling API")
 
-        response = openai_client.chat.completions.create(
+        kwargs: dict[str, Any] = dict(
             model=self.model,
             messages=self._messages,
             temperature=temperature,
         )
+        if json_mode:
+            kwargs.update(response_format={"type": "json_object"})
+
+        response: ChatCompletion = openai_client.chat.completions.create(**kwargs)
         answer = response.choices[0].message.content
         if answer is None:
             raise ModelError("Model did not output any message")

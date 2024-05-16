@@ -66,6 +66,8 @@ and the last answer you gave to the user. \
 Then you will be presented the user's new question. \
 To improve the quality of your next response, \
 you should first rephrase the question to reflect the context.
+NOTE: Since the given question history is not saved and will disappear, \
+the rephrased question must include all meaningful context from the past.
 Your answer should be in JSON format, and it should contain three keys: "reason", "related" and "rephrased".
 
 * "reason": The reason why you think the new question is related to the previous questions or not.

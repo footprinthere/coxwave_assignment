@@ -53,7 +53,7 @@ class ChatbotAgent(BaseGPTAgent):
             log(f"--- Model Answer ---\n{answer}")
 
         self._last_answer = answer
-        return answer
+        return ChatbotAgent._process_answer(answer)
 
     def retrieve_info(self, question: str, n_results: int = 1) -> str:
         if question.strip() == "":
@@ -106,3 +106,12 @@ class ChatbotAgent(BaseGPTAgent):
             return rephrased
         else:
             return self._question_history[-1]  # use the last question
+
+    @staticmethod
+    def _process_answer(answer: str) -> str:
+        # Truncate after the last period
+        p_idx = answer.rfind(".")
+        if p_idx > 0:
+            answer = answer[:p_idx]
+
+        return answer

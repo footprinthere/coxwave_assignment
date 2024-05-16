@@ -111,12 +111,12 @@ class Main:
 
         if answer.upper().startswith("X"):
             print(
-                "죄송합니다. 스마트스토어와 관련이 없는 질문에는 답변해드릴 수 없어요."
+                "🤖 죄송합니다. 스마트스토어와 관련이 없는 질문에는 답변해드릴 수 없어요.\n"
             )
             cls.agent.clear_history()
             return ChatbotCycleResult.UNRELATED
         else:
-            print(f"\033[36m-->\033[0m {answer}\n")
+            print(f"🤖 {answer}\n")
             return result
 
     START_MESSAGE = (

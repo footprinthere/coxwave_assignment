@@ -109,6 +109,8 @@ class ChatbotAgent(BaseGPTAgent):
 
     @staticmethod
     def _process_answer(answer: str) -> str:
+        answer = answer.strip()
+
         # Truncate after the last period
         p_idx = answer.rfind(".")
         if p_idx > 0:

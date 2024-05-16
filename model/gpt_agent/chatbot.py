@@ -3,7 +3,7 @@ from collections import deque
 
 from chromadb import Collection
 
-from tools import log
+from log import log
 from ..exceptions import EmptyMessageError, ParsingError
 from ..model_name import ModelName
 from .prompts import CHATBOT_ANSWER

@@ -1,6 +1,6 @@
 from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
 
-from .client import OPENAI_API_KEY, openai_client
+from .client import OPENAI_API_KEY
 from .model_name import ModelName
 
 

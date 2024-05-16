@@ -8,7 +8,7 @@ from model import (
     ModelName,
     EmptyMessageError,
 )
-from tools import log
+from log import log
 
 
 class Main:

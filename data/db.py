@@ -1,9 +1,7 @@
-import logging
 from tqdm import tqdm
-
 import chromadb
 
-from tools import log
+from log import log
 from .source import BaseSourceProcessor
 
 

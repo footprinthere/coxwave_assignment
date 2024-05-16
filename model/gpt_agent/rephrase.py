@@ -1,7 +1,7 @@
 from typing import Any, Optional
 import json
 
-from tools import log
+from log import log
 from ..exceptions import ParsingError
 from .prompts import QUESTION_REPHRASE
 from .base import BaseGPTAgent

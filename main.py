@@ -52,7 +52,7 @@ class Main:
     def _parse_args(cls) -> argparse.Namespace:
         parser = argparse.ArgumentParser()
         parser.add_argument("--source_path", type=str, required=True)
-        parser.add_argument("--collection_name", type=str, required=True)
+        parser.add_argument("--collection_name", type=str, default="faq")
         parser.add_argument("--max_retry", type=int, default=3)
         parser.add_argument("--max_history", type=int, default=5)
         parser.add_argument("--debug", action="store_true")

@@ -2,7 +2,7 @@ from enum import Enum, auto
 
 
 def log(message: str) -> None:
-    print(f"[LOG] {message}")
+    print(f"\033[32m[LOG]\033[0m {message}")
 
 
 class ChatbotCycleResult(Enum):

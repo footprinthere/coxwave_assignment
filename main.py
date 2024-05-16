@@ -36,7 +36,7 @@ class Main:
         # Run chatbot
         retry_count = 0
         while True:
-            user_input = input(">>> ").strip()
+            user_input = input("\033[36m>>>\033[0m ").strip()
             result = cls._cycle(user_input, retry_count)
             if cls.args.debug:
                 log(f"Cycle result: {result}")
@@ -116,7 +116,7 @@ class Main:
             cls.agent.clear_history()
             return ChatbotCycleResult.UNRELATED
         else:
-            print(f"--> {answer}\n")
+            print(f"\033[36m-->\033[0m {answer}\n")
             return result
 
     START_MESSAGE = (
